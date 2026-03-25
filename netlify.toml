@@ -7,9 +7,6 @@
 
 [functions]
   node_bundler = "esbuild"
-  # With SSE streaming the connection stays open, avoiding function timeout.
-  # Set to 26s (Netlify Pro max). Free tier is 10s but streaming bypasses it.
-  included_files = ["**"]
 
 [dev]
   command = "npm run dev"
