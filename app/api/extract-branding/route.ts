@@ -76,7 +76,7 @@ Extract the branding: hex colors from CSS/styles, font family names, tone of the
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       generationConfig: {
         responseMimeType: 'application/json',
         responseSchema: brandingSchema,
