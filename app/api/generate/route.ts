@@ -192,19 +192,10 @@ export async function POST(req: Request) {
           },
         })
 
-        const result = await model.generateContentStream(prompt)
-
-        let fullText = ''
-        let chunkCount = 0
-        for await (const chunk of result.stream) {
-          const text = chunk.text()
-          fullText += text
-          chunkCount++
-          // Send periodic progress ticks so the UI can animate
-          if (chunkCount % 10 === 0) {
-            sseEvent(controller, { type: 'token', content: text })
-          }
-        }
+        // Use generateContent (non-streaming) to avoid thinking-token contamination
+        // with gemini-2.5-flash's thinking mode in streaming responses
+        const result = await model.generateContent(prompt)
+        const fullText = result.response.text()
 
         let output: GeneratedOutput
         try {
