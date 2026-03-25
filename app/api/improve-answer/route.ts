@@ -35,7 +35,7 @@ Return ONLY the improved answer text — no preamble, no explanation. Just write
 If the current answer is empty, write a strong example answer for this type of company/context.`
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
     const result = await model.generateContent(prompt)
     const improvedAnswer = result.response.text().trim()
 
