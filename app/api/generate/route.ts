@@ -192,10 +192,21 @@ export async function POST(req: Request) {
           },
         })
 
-        // Use generateContent (non-streaming) to avoid thinking-token contamination
-        // with gemini-2.5-flash's thinking mode in streaming responses
-        const result = await model.generateContent(prompt)
-        const fullText = result.response.text()
+        // Stream to keep Netlify connection alive, then use aggregated
+        // result.response for clean JSON (avoids thinking-token contamination)
+        const result = await model.generateContentStream(prompt)
+
+        let chunkCount = 0
+        for await (const chunk of result.stream) {
+          chunkCount++
+          // Periodic keepalive so Netlify doesn't close the connection
+          if (chunkCount % 5 === 0) {
+            sseEvent(controller, { type: 'token', content: '' })
+          }
+        }
+
+        // result.response is the aggregated final response — clean of thinking tokens
+        const fullText = (await result.response).text()
 
         let output: GeneratedOutput
         try {
