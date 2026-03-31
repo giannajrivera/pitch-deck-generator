@@ -136,7 +136,8 @@ export default function SharedDeckPage() {
                 slide={slide}
                 index={i}
                 branding={branding}
-                isExpanded={true}
+                isExpanded={false}
+                companyName={companyName}
               />
             ))}
           </div>

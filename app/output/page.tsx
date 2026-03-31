@@ -280,6 +280,7 @@ export default function OutputPage() {
                   index={i}
                   branding={branding}
                   isExpanded={allExpanded}
+                  companyName={companyName}
                 />
               ))}
             </div>
