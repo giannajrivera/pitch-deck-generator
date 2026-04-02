@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, Edit2, Zap, ChevronDown, ChevronUp, Layout, Save, Share2, Check, Loader2, User, ExternalLink } from 'lucide-react'
 import { useStore, useGenerated, useBranding, useAnswers, useMode, useUserId, useSessionId } from '@/lib/store'
@@ -12,6 +12,14 @@ import { ModeToggle } from '@/components/ModeToggle'
 type OutputTab = 'deck' | 'talktrack'
 
 export default function OutputPage() {
+  return (
+    <Suspense>
+      <OutputPageInner />
+    </Suspense>
+  )
+}
+
+function OutputPageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const generated = useGenerated()
