@@ -97,7 +97,7 @@ export function ExportButtons({ output, branding, companyName }: ExportButtonsPr
       doc.text('Talk Track', margin, 12)
       doc.setFontSize(11)
       doc.setTextColor(30, 27, 75)
-      const lines = doc.splitTextToSize(output.talkTrack, pageW - margin * 2)
+      const lines = doc.splitTextToSize(output.talkTrack || '', pageW - margin * 2)
       let y = 30
       for (const line of lines) {
         if (y > pageH - margin) { doc.addPage(); y = margin }
@@ -205,7 +205,7 @@ export function ExportButtons({ output, branding, companyName }: ExportButtonsPr
         x: 0.4, y: 0, w: 11, h: 1.2,
         fontSize: 28, bold: true, color: 'FFFFFF', valign: 'middle',
       })
-      ttSlide.addText(output.talkTrack.slice(0, 800) + (output.talkTrack.length > 800 ? '...' : ''), {
+      ttSlide.addText((output.talkTrack || '').slice(0, 800) + ((output.talkTrack || '').length > 800 ? '...' : ''), {
         x: 0.4, y: 1.5, w: 11.5, h: 5,
         fontSize: 11, color: '374151', valign: 'top',
         wrap: true,
@@ -280,7 +280,7 @@ function buildTextExport(output: GeneratedOutput, companyName: string): string {
     '',
     'TALK TRACK',
     '-'.repeat(30),
-    output.talkTrack,
+    output.talkTrack || '',
     '',
     '='.repeat(50),
     '',
@@ -294,7 +294,7 @@ function buildTextExport(output: GeneratedOutput, companyName: string): string {
     lines.push('')
     ;(slide.content ?? slide.bullets ?? []).forEach(bullet => lines.push(`• ${bullet}`))
     lines.push('')
-    lines.push(`Visual: ${slide.suggestedVisual}`)
+    lines.push(`Visual: ${slide.visualSuggestion || slide.suggestedVisual || ''}`)
     lines.push('')
     lines.push('Design Notes:')
     lines.push(`  Layout: ${slide.designNotes.layout}`)
