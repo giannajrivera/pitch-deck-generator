@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, Edit2, Zap, ChevronDown, ChevronUp, Layout, Save, Share2, Check, Loader2, User, ExternalLink } from 'lucide-react'
 import { useStore, useGenerated, useBranding, useAnswers, useMode, useUserId, useSessionId } from '@/lib/store'
+import type { PitchDeckSlide } from '@/lib/types'
 import { SlideCard } from '@/components/SlideCard'
 import { TalkTrackPanel } from '@/components/TalkTrackPanel'
 import { ExportButtons } from '@/components/ExportButtons'
@@ -40,7 +41,7 @@ function OutputPageInner() {
   // Canva state
   const [canvaLoading, setCanvaLoading] = useState(false)
   const [canvaError, setCanvaError] = useState<string | null>(null)
-  const [canvaPromptCopied, setCanvaPromptCopied] = useState(false)
+  const [canvaPromptCopied, setCanvaPromptCopied] = useState<null | 1 | 2>(null)
   const canvaTriggered = useRef(false)
 
   const companyName = answers.company_name || 'Your Company'
@@ -122,13 +123,7 @@ function OutputPageInner() {
     window.location.href = '/api/canva/auth'
   }
 
-  const handleCopyCanvaPrompt = () => {
-    if (!generated) return
-
-    const primary = branding.colors[0] || '#7C3AED'
-    const font = branding.fonts[0] || 'Inter'
-
-    // CT SBDC exact slide labels and descriptions
+  const buildCanvaSlideBlock = (slide: PitchDeckSlide, i: number) => {
     const SLIDE_SPEC: Record<string, { label: string; description: string }> = {
       intro:         { label: 'Intro',                 description: 'Company name, slogan, and founder(s)' },
       problem:       { label: 'Problem',               description: 'What is the problem you are trying to solve?' },
@@ -143,44 +138,67 @@ function OutputPageInner() {
       team:          { label: 'Team',                  description: 'Core team members plus consultants and advisors' },
       ask:           { label: 'Ask',                   description: 'What are you looking for? Capital amount, advice, partnerships?' },
     }
+    const spec = SLIDE_SPEC[slide.id] || { label: slide.title, description: '' }
+    const bullets = (slide.content ?? slide.bullets ?? []).join('\n  • ')
+    return [
+      `SLIDE ${i + 1}: ${spec.label}`,
+      `Purpose: ${spec.description}`,
+      slide.coreMessage ? `Key message: ${slide.coreMessage}` : '',
+      bullets ? `Content:\n  • ${bullets}` : '',
+      slide.visualSuggestion ? `Visual: ${slide.visualSuggestion}` : '',
+      slide.layoutSuggestion ? `Layout: ${slide.layoutSuggestion}` : '',
+    ].filter(Boolean).join('\n')
+  }
 
-    const slideLines = generated.slides.map((slide, i) => {
-      const spec = SLIDE_SPEC[slide.id] || { label: slide.title, description: '' }
-      const bullets = (slide.content ?? slide.bullets ?? []).join('\n  • ')
-      return [
-        `SLIDE ${i + 1}: ${spec.label}`,
-        `Purpose: ${spec.description}`,
-        slide.coreMessage ? `Key message: ${slide.coreMessage}` : '',
-        bullets ? `Content:\n  • ${bullets}` : '',
-        slide.visualSuggestion ? `Visual direction: ${slide.visualSuggestion}` : '',
-        slide.layoutSuggestion ? `Layout: ${slide.layoutSuggestion}` : '',
-      ].filter(Boolean).join('\n')
-    }).join('\n\n---\n\n')
+  const truncateTo4k = (text: string) =>
+    text.length <= 4000 ? text : text.slice(0, 3997) + '...'
 
-    const prompt = `Create a professional 12-slide investor and grant-ready pitch deck for ${companyName}.
+  const handleCopyCanvaPrompt = (part: 1 | 2) => {
+    if (!generated) return
+    const primary = branding.colors[0] || '#7C3AED'
+    const font = branding.fonts[0] || 'Inter'
+
+    const slides = generated.slides
+    const half = Math.ceil(slides.length / 2)
+    const chunk = part === 1 ? slides.slice(0, half) : slides.slice(half)
+    const startIdx = part === 1 ? 0 : half
+
+    const slideLines = chunk
+      .map((slide, i) => buildCanvaSlideBlock(slide, startIdx + i))
+      .join('\n\n---\n\n')
+
+    const prompt = part === 1
+      ? truncateTo4k(`Create a professional investor and grant-ready pitch deck for ${companyName}. This is Part 1 of 2 — slides 1-${half}.
 
 BRAND
-Color: ${primary}
-Font: ${font}
-Style: Clean, modern, minimal — built for investors and grant reviewers. No clutter.
+Color: ${primary} | Font: ${font}
+Style: Clean, modern, minimal. For investors and grant reviewers.
 
 DESIGN RULES
-- Keep all bullet text under 10 words per line
-- Every slide must include a relevant visual, chart, or graphic
-- Use the brand color for headers, accents, and key stats
-- Competition slide MUST include a comparison chart/table showing differentiators
-- Financials slide MUST include a 3-year projection chart with breakeven highlighted
-- Market Size slide MUST show TAM > SAM > SOM visually (concentric circles or bar chart)
-- Consistent typography and layout across all slides
+- Bullet text max 10 words per line
+- Every slide needs a visual, chart, or graphic
+- Use brand color for headers and accents
+- Market Size: show TAM > SAM > SOM visually (concentric circles)
+- Competition: include a comparison chart/table
 
-SLIDES
 ${slideLines}
 
-Follow the CT SBDC pitch deck format exactly. Make it visually compelling and investor-ready.`
+After generating these slides, wait for Part 2 before finalizing the deck.`)
+      : truncateTo4k(`Continue the pitch deck for ${companyName}. This is Part 2 of 2 — slides ${half + 1}-${slides.length}. Keep the same brand colors (${primary}), font (${font}), and design style from Part 1.
+
+DESIGN RULES (same as Part 1)
+- Bullet text max 10 words per line
+- Every slide needs a visual or chart
+- Financials: include a 3-year projection chart with breakeven highlighted
+- Ask: be specific about capital amount and use of funds
+
+${slideLines}
+
+Follow the CT SBDC pitch deck format. Make it visually compelling and investor-ready.`)
 
     navigator.clipboard.writeText(prompt)
-    setCanvaPromptCopied(true)
-    setTimeout(() => setCanvaPromptCopied(false), 2500)
+    setCanvaPromptCopied(part)
+    setTimeout(() => setCanvaPromptCopied(null), 2500)
   }
 
   const handleSave = async () => {
@@ -378,13 +396,21 @@ Follow the CT SBDC pitch deck format exactly. Make it visually compelling and in
               branding={branding}
               companyName={companyName}
             />
-            {/* Copy Canva Prompt */}
+            {/* Copy Canva Prompt — Part 1 */}
             <button
-              onClick={handleCopyCanvaPrompt}
+              onClick={() => handleCopyCanvaPrompt(1)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium text-sm border border-[#7D2AE8] text-[#7D2AE8] hover:bg-purple-50 transition-all"
             >
-              {canvaPromptCopied ? <Check size={14} /> : <ExternalLink size={14} />}
-              {canvaPromptCopied ? 'Copied!' : 'Copy Canva Prompt'}
+              {canvaPromptCopied === 1 ? <Check size={14} /> : <ExternalLink size={14} />}
+              {canvaPromptCopied === 1 ? 'Copied!' : 'Canva Prompt 1'}
+            </button>
+            {/* Copy Canva Prompt — Part 2 */}
+            <button
+              onClick={() => handleCopyCanvaPrompt(2)}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium text-sm border border-[#7D2AE8] text-[#7D2AE8] hover:bg-purple-50 transition-all"
+            >
+              {canvaPromptCopied === 2 ? <Check size={14} /> : <ExternalLink size={14} />}
+              {canvaPromptCopied === 2 ? 'Copied!' : 'Canva Prompt 2'}
             </button>
             {/* Open in Canva */}
             <button
