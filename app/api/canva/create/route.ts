@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
   form.append('title', `${companyName} Pitch Deck`)
   form.append(
     'asset',
-    new Blob([pptxBuffer], {
+    new Blob([new Uint8Array(pptxBuffer)], {
       type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     }),
     `${companyName.replace(/\s+/g, '_')}_pitch_deck.pptx`
