@@ -162,7 +162,7 @@ export function ExportButtons({ output, branding, companyName }: ExportButtonsPr
         x: 1, y: 2, w: 10, h: 1.5,
         fontSize: 44, bold: true, color: 'FFFFFF', align: 'center',
       })
-      titleSlide.addText(output.slides[0]?.bullets[0] || '', {
+      titleSlide.addText((output.slides[0]?.content ?? output.slides[0]?.bullets ?? [])[0] || '', {
         x: 1, y: 3.8, w: 10, h: 0.8,
         fontSize: 18, color: 'E0D7FF', align: 'center',
       })
@@ -296,12 +296,15 @@ function buildTextExport(output: GeneratedOutput, companyName: string): string {
     lines.push('')
     lines.push(`Visual: ${slide.visualSuggestion || slide.suggestedVisual || ''}`)
     lines.push('')
-    lines.push('Design Notes:')
-    lines.push(`  Layout: ${slide.designNotes.layout}`)
-    lines.push(`  Colors: ${slide.designNotes.colorUsage}`)
-    lines.push(`  Fonts: ${slide.designNotes.fontHierarchy}`)
-    lines.push(`  Logo: ${slide.designNotes.logoPlacement}`)
-    lines.push(`  Style: ${slide.designNotes.visualStyle}`)
+    if (slide.layoutSuggestion) lines.push(`Layout: ${slide.layoutSuggestion}`)
+    if (slide.designNotes) {
+      lines.push('Design Notes:')
+      lines.push(`  Layout: ${slide.designNotes.layout}`)
+      lines.push(`  Colors: ${slide.designNotes.colorUsage}`)
+      lines.push(`  Fonts: ${slide.designNotes.fontHierarchy}`)
+      lines.push(`  Logo: ${slide.designNotes.logoPlacement}`)
+      lines.push(`  Style: ${slide.designNotes.visualStyle}`)
+    }
     lines.push('-'.repeat(30))
   })
 
