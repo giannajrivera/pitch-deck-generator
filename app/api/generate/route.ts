@@ -105,7 +105,8 @@ function buildGenerationPrompt(
   const answerSummary = buildAnswerSummary(answers)
   const brandingContext = buildBrandingContext(branding)
   const companyName = answers.company_name || 'this company'
-  const hasMarketSize = !!(answers.market_size?.trim())
+  const industry = answers.industry?.trim() || ''
+  const geography = answers.geography?.trim() || 'United States'
 
   return `You are an expert startup pitch coach, investor relations advisor, and visual deck designer. Generate a world-class, investor-ready pitch deck for ${companyName}.
 
@@ -126,14 +127,16 @@ GENERATION REQUIREMENTS
    - visualSuggestion must be actionable: "Concentric circles: TAM $12B → SAM $2.1B → SOM $85M" not just "show market size"
    - layoutSuggestion must guide Canva placement precisely: "Split — left 35% brand-color panel with large stat, right 65% white with 4 bullets"
 
-2. MARKET INTELLIGENCE — ALWAYS INFER IF NEEDED:
-${hasMarketSize
-    ? '   - User provided market size data above — use their numbers as the foundation'
-    : '   - No market size provided — INFER TAM/SAM/SOM using bottom-up methodology:'}
-   - Derive from: industry vertical + target customer count × estimated ACV + comparable company revenues
-   - Express as: TAM $XB, SAM $XM, SOM $XM
-   - Add one bullet showing the math: e.g. "~45K target companies × $600 ACV = $27M SOM"
-   - Market must feel credible and defensible — not hand-wavy
+2. MARKET RESEARCH — AI-ESTIMATED TAM/SAM/SOM (never ask the user for this):
+   Industry: ${industry || 'infer from company description and problem'}
+   Geography: ${geography}
+   - Using your training knowledge of market research reports, industry benchmarks, and comparable companies, estimate defensible TAM/SAM/SOM for this business
+   - TAM: Total global (or national) market for this category — cite the research logic (e.g. "US restaurant tech market per IBISWorld/Statista estimates")
+   - SAM: The serviceable slice — narrowed by geography, customer segment, and product fit
+   - SOM: Realistic 3-5 year capture — based on team size, GTM strategy, and competitive dynamics
+   - ALWAYS show the bottom-up math: e.g. "~45K target restaurants × $600 ACV = $27M SOM"
+   - Use specific dollar figures. Never use ranges like "$1B-$5B" — pick a defensible number and explain it
+   - Flag your confidence level if data is limited: "(estimated — verify with IBISWorld or Statista)"
 
 3. INVESTOR INTELLIGENCE (apply to each slide):
    - PROBLEM: quantify pain in $, hours, or outcomes lost — no vague claims
