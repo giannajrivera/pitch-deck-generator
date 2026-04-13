@@ -251,10 +251,7 @@ export default function QuestionnairePage() {
       <aside className="hidden lg:flex flex-col w-64 xl:w-72 bg-white border-r border-gray-100 flex-shrink-0 h-screen sticky top-0 overflow-y-auto">
         <div className="p-5 border-b border-gray-100">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-7 h-7 bg-brand-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-black text-xs">P</span>
-            </div>
-            <span className="font-bold text-gray-800">PitchDeck</span>
+            <span className="font-bold text-gray-800">Connect.AI</span>
           </div>
           <ProgressBar variant="minimal" />
         </div>

@@ -60,10 +60,7 @@ export default function AuthPage() {
 
         <div className="bg-white rounded-3xl border border-gray-100 shadow-xl p-8">
           <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-black text-sm">P</span>
-            </div>
-            <span className="font-bold text-gray-800">PitchDeck</span>
+            <span className="font-bold text-gray-800">Connect.AI</span>
           </div>
 
           <h1 className="text-2xl font-bold text-gray-900 mb-1">

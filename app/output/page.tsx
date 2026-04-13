@@ -509,7 +509,7 @@ function OutputPageInner() {
 
         {/* Footer */}
         <div className="mt-10 pt-6 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4 text-sm text-gray-400">
-          <p>Generated with Gemini AI • PitchDeck Generator</p>
+          <p>Powered by Connect.AI</p>
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push('/questionnaire')}

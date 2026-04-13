@@ -41,10 +41,7 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="max-w-6xl mx-auto px-4 py-5 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-            <span className="text-brand-700 font-black text-sm">P</span>
-          </div>
-          <span className="text-white font-bold text-lg">PitchDeck</span>
+          <span className="text-white font-bold text-lg">Connect.AI</span>
         </div>
         <div className="flex items-center gap-3">
           {hasProgress && (
@@ -214,10 +211,9 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-brand-950 py-6">
-        <div className="max-w-5xl mx-auto px-4 flex items-center justify-between text-brand-400 text-xs">
-          <span>PitchDeck Generator — Powered by Claude AI</span>
-          <span>Add your ANTHROPIC_API_KEY to get started</span>
+      <footer className="bg-brand-800 py-6">
+        <div className="max-w-5xl mx-auto px-4 flex items-center justify-center text-brand-300 text-xs">
+          <span>Powered by Connect.AI</span>
         </div>
       </footer>
     </div>

@@ -27,10 +27,7 @@ export default function OnboardingPage() {
             Back
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-brand-600 rounded-md flex items-center justify-center">
-              <span className="text-white font-black text-xs">P</span>
-            </div>
-            <span className="font-semibold text-gray-800">PitchDeck</span>
+            <span className="font-semibold text-gray-800">Connect.AI</span>
           </div>
           <ModeToggle mode={mode} onChange={setMode} size="sm" />
         </div>
