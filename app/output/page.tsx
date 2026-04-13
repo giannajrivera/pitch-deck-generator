@@ -149,7 +149,7 @@ function OutputPageInner() {
 
   const handleCopyCanvaPrompt = (part: 1 | 2) => {
     if (!generated) return
-    const primary = branding.colors[0] || '#7C3AED'
+    const primary = branding.colors[0] || '#002d62'
     const font = branding.fonts[0] || 'Inter'
     const LIMIT = 3750 // extra buffer below 3800
 
@@ -278,7 +278,7 @@ function OutputPageInner() {
             ) : (
               <div
                 className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white"
-                style={{ backgroundColor: branding.colors[0] || '#7C3AED' }}
+                style={{ backgroundColor: branding.colors[0] || '#002d62' }}
               >
                 {companyName.charAt(0).toUpperCase()}
               </div>
@@ -380,7 +380,7 @@ function OutputPageInner() {
             {/* Copy Canva Prompt — Part 1 */}
             <button
               onClick={() => handleCopyCanvaPrompt(1)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium text-sm border border-[#7D2AE8] text-[#7D2AE8] hover:bg-purple-50 transition-all"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium text-sm border border-brand-600 text-brand-600 hover:bg-brand-50 transition-all"
             >
               {canvaPromptCopied === 1 ? <Check size={14} /> : <ExternalLink size={14} />}
               {canvaPromptCopied === 1 ? 'Copied!' : 'Canva Prompt 1'}
@@ -388,7 +388,7 @@ function OutputPageInner() {
             {/* Copy Canva Prompt — Part 2 */}
             <button
               onClick={() => handleCopyCanvaPrompt(2)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium text-sm border border-[#7D2AE8] text-[#7D2AE8] hover:bg-purple-50 transition-all"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium text-sm border border-brand-600 text-brand-600 hover:bg-brand-50 transition-all"
             >
               {canvaPromptCopied === 2 ? <Check size={14} /> : <ExternalLink size={14} />}
               {canvaPromptCopied === 2 ? 'Copied!' : 'Canva Prompt 2'}
@@ -397,7 +397,7 @@ function OutputPageInner() {
             <button
               onClick={handleOpenInCanva}
               disabled={canvaLoading}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium text-sm bg-[#7D2AE8] hover:bg-[#6B24CC] text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium text-sm bg-brand-600 hover:bg-brand-700 text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {canvaLoading ? (
                 <Loader2 size={14} className="animate-spin" />

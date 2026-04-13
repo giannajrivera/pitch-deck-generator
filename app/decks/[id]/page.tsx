@@ -84,7 +84,7 @@ export default function SharedDeckPage() {
           <div className="flex items-center gap-2">
             <div
               className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white"
-              style={{ backgroundColor: branding?.colors?.[0] || '#7C3AED' }}
+              style={{ backgroundColor: branding?.colors?.[0] || '#002d62' }}
             >
               {companyName.charAt(0).toUpperCase()}
             </div>

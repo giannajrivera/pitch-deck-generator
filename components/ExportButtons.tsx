@@ -29,7 +29,7 @@ export function ExportButtons({ output, branding, companyName }: ExportButtonsPr
     try {
       const { jsPDF } = await import('jspdf')
       const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
-      const primaryColor = branding.colors[0] || '#7C3AED'
+      const primaryColor = branding.colors[0] || '#002d62'
       const rgb = hexToRgbValues(primaryColor)
 
       const pageW = doc.internal.pageSize.getWidth()
@@ -56,7 +56,7 @@ export function ExportButtons({ output, branding, companyName }: ExportButtonsPr
 
         // Content
         doc.setFontSize(12)
-        doc.setTextColor(30, 27, 75)
+        doc.setTextColor(0, 45, 98)
         let y = 35
         for (const line of content) {
           if (line.startsWith('|')) continue // skip table rows (too complex for basic PDF)
@@ -120,9 +120,9 @@ export function ExportButtons({ output, branding, companyName }: ExportButtonsPr
       const pptxgen = (await import('pptxgenjs')).default
       const prs = new pptxgen()
 
-      const primaryHex = branding.colors[0] || '7C3AED'
+      const primaryHex = branding.colors[0] || '#002d62'
       const primaryClean = primaryHex.replace('#', '')
-      const secondaryHex = (branding.colors[1] || '5B21B6').replace('#', '')
+      const secondaryHex = (branding.colors[1] || '#08193c').replace('#', '')
 
       prs.layout = 'LAYOUT_WIDE'
 
@@ -164,7 +164,7 @@ export function ExportButtons({ output, branding, companyName }: ExportButtonsPr
       })
       titleSlide.addText((output.slides[0]?.content ?? output.slides[0]?.bullets ?? [])[0] || '', {
         x: 1, y: 3.8, w: 10, h: 0.8,
-        fontSize: 18, color: 'E0D7FF', align: 'center',
+        fontSize: 18, color: 'C8DEFF', align: 'center',
       })
 
       // Content slides
@@ -189,7 +189,7 @@ export function ExportButtons({ output, branding, companyName }: ExportButtonsPr
         if (bulletPoints.length > 0) {
           s.addText(bulletPoints, {
             x: 0.4, y: 1.5, w: 11.5, h: 5,
-            fontSize: 16, color: '1E1B4B', valign: 'top',
+            fontSize: 16, color: '002d62', valign: 'top',
             bullet: { type: 'bullet' },
           })
         }

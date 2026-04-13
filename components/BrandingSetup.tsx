@@ -29,7 +29,7 @@ const STYLE_OPTIONS = [
 
 const COMPANY_TYPES = ['SaaS', 'Marketplace', 'Consumer App', 'Hardware', 'Biotech', 'Fintech', 'EdTech', 'Services', 'E-commerce', 'Developer Tools', 'AI/ML', 'Other']
 
-const DEFAULT_PALETTE = ['#7C3AED', '#5B21B6', '#0EA5E9', '#1E1B4B', '#F3F4F6', '#111827']
+const DEFAULT_PALETTE = ['#002d62', '#08193c', '#3075a6', '#1f4a6a', '#ecf4fe', '#d11242']
 
 export function BrandingSetup({ branding, onUpdate }: BrandingSetupProps) {
   const [activeColorIndex, setActiveColorIndex] = useState<number | null>(null)
@@ -84,13 +84,13 @@ export function BrandingSetup({ branding, onUpdate }: BrandingSetupProps) {
 
   const addColor = () => {
     if (branding.colors.length < 6) {
-      onUpdate({ colors: [...branding.colors, '#7C3AED'] })
+      onUpdate({ colors: [...branding.colors, '#002d62'] })
     }
   }
 
   const removeColor = (index: number) => {
     const newColors = branding.colors.filter((_, i) => i !== index)
-    onUpdate({ colors: newColors.length > 0 ? newColors : ['#7C3AED'] })
+    onUpdate({ colors: newColors.length > 0 ? newColors : ['#002d62'] })
     if (activeColorIndex === index) setActiveColorIndex(null)
   }
 
@@ -252,7 +252,7 @@ export function BrandingSetup({ branding, onUpdate }: BrandingSetupProps) {
         {activeColorIndex !== null && (
           <div className="mt-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
             <HexColorPicker
-              color={branding.colors[activeColorIndex] || '#7C3AED'}
+              color={branding.colors[activeColorIndex] || '#002d62'}
               onChange={(hex) => updateColor(activeColorIndex, hex)}
               className="w-full"
             />
@@ -264,7 +264,7 @@ export function BrandingSetup({ branding, onUpdate }: BrandingSetupProps) {
                 if (/^#[0-9A-Fa-f]{6}$/.test(val)) updateColor(activeColorIndex, val)
               }}
               className="mt-2 w-full text-center font-mono text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-brand-400"
-              placeholder="#7C3AED"
+              placeholder="#002d62"
             />
           </div>
         )}

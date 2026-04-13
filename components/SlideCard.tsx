@@ -437,9 +437,9 @@ interface SlideCardProps {
 export function SlideCard({ slide, index, branding, isExpanded = false, companyName = '' }: SlideCardProps) {
   const [showDetails, setShowDetails] = useState(isExpanded)
 
-  const primary = branding.colors[0] || '#7C3AED'
-  const secondary = branding.colors[1] || '#5B21B6'
-  const accent = branding.colors[2] || '#0EA5E9'
+  const primary = branding.colors[0] || '#002d62'
+  const secondary = branding.colors[1] || '#08193c'
+  const accent = branding.colors[2] || '#3075a6'
   const onPrimary = getContrastColor(primary)
 
   const Body = BODIES[slide.id] ?? BulletBody
@@ -482,9 +482,9 @@ export function SlideCard({ slide, index, branding, isExpanded = false, companyN
         <div className="px-3 pb-3 space-y-2 border-t border-gray-50">
           {/* Core Message */}
           {slide.coreMessage && (
-            <div className="p-2 bg-violet-50 rounded-lg mt-2">
-              <p className="text-[9px] font-semibold text-violet-600 mb-0.5">Core Message</p>
-              <p className="text-[10px] text-violet-800 leading-snug font-medium">{slide.coreMessage}</p>
+            <div className="p-2 bg-brand-50 rounded-lg mt-2">
+              <p className="text-[9px] font-semibold text-brand-600 mb-0.5">Core Message</p>
+              <p className="text-[10px] text-brand-700 leading-snug font-medium">{slide.coreMessage}</p>
             </div>
           )}
           {/* Visual & Layout suggestions */}
@@ -539,7 +539,7 @@ export function SlidePreview({
   branding: BrandingProfile
   onClick: () => void
 }) {
-  const primary = branding.colors[0] || '#7C3AED'
+  const primary = branding.colors[0] || '#002d62'
   const onPrimary = getContrastColor(primary)
   return (
     <button
