@@ -28,6 +28,9 @@ export default function RootLayout({
       <body className="min-h-screen bg-gray-50">
         <AuthInit />
         {children}
+        <div className="w-full text-center py-2 text-xs text-gray-400 border-t border-gray-100 bg-white">
+          Powered by <span className="font-semibold text-gray-500">Connect.AI</span>
+        </div>
       </body>
     </html>
   )
