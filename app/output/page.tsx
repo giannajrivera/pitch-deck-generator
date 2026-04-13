@@ -132,15 +132,13 @@ function OutputPageInner() {
 
   const buildCompactSlideBlock = (slide: PitchDeckSlide, i: number): string => {
     const label = SLIDE_LABELS[slide.id] || slide.title
-    // Truncate message to 90 chars
-    const msg = (slide.coreMessage || '').slice(0, 90)
-    // Max 4 bullets, each max 10 words
+    // Strict truncation on every field
+    const msg = (slide.coreMessage || '').slice(0, 75)
     const bullets = (slide.content ?? slide.bullets ?? [])
-      .slice(0, 4)
-      .map(b => b.split(' ').slice(0, 10).join(' '))
+      .slice(0, 3)
+      .map(b => b.split(' ').slice(0, 8).join(' '))
       .join('\n• ')
-    // Visual max 70 chars
-    const visual = (slide.visualSuggestion || slide.suggestedVisual || '').slice(0, 70)
+    const visual = (slide.visualSuggestion || slide.suggestedVisual || '').slice(0, 55)
     return [
       `[${i + 1}] ${label}`,
       msg ? `"${msg}"` : '',
@@ -153,7 +151,7 @@ function OutputPageInner() {
     if (!generated) return
     const primary = branding.colors[0] || '#7C3AED'
     const font = branding.fonts[0] || 'Inter'
-    const LIMIT = 3800
+    const LIMIT = 3750 // extra buffer below 3800
 
     const slides = generated.slides
     const half = Math.ceil(slides.length / 2)
@@ -161,10 +159,10 @@ function OutputPageInner() {
     const startIdx = part === 1 ? 0 : half
 
     const header = part === 1
-      ? `Investor pitch deck for ${companyName} — Part 1 (slides 1-${half}).\nColor: ${primary} | Font: ${font} | Style: clean, minimal, investor-ready.\nRules: max 10 words/bullet, every slide needs a visual, brand color on headers.\nMarket Size: TAM→SAM→SOM concentric circles. Competition: comparison chart required.\n\n`
-      : `Continue the pitch deck for ${companyName} — Part 2 (slides ${half + 1}-${slides.length}).\nSame brand: ${primary}, ${font}. Keep consistent style from Part 1.\nFinancials: 3-year chart with breakeven. Ask: state capital amount and use of funds.\n\n`
+      ? `Pitch deck for ${companyName} — Part 1 (slides 1-${half}).\nColor: ${primary} | Font: ${font} | Style: clean, minimal, investor-ready.\nRules: max 8 words/bullet, every slide needs a visual, brand color on headers.\nMarket Size: TAM→SAM→SOM circles. Competition: comparison chart required.\n\n`
+      : `Continue pitch deck for ${companyName} — Part 2 (slides ${half + 1}-${slides.length}).\nSame brand: ${primary}, ${font}. Match Part 1 style exactly.\nFinancials: 3-year chart with breakeven highlighted. Ask: capital amount + use of funds.\n\n`
 
-    // Add slides one at a time — stop before exceeding limit (never cut mid-slide)
+    // Add slides one at a time — never cut mid-slide
     let prompt = header
     for (let i = 0; i < chunk.length; i++) {
       const block = buildCompactSlideBlock(chunk[i], startIdx + i) + '\n\n'
@@ -172,7 +170,13 @@ function OutputPageInner() {
       prompt += block
     }
 
+    // Final hard cap — trim at last newline before 3800
     prompt = prompt.trimEnd()
+    if (prompt.length > 3800) {
+      const cutoff = prompt.lastIndexOf('\n', 3800)
+      prompt = prompt.slice(0, cutoff > 0 ? cutoff : 3800).trimEnd()
+    }
+
     navigator.clipboard.writeText(prompt)
     setCanvaPromptCopied(part)
     setTimeout(() => setCanvaPromptCopied(null), 2500)
